@@ -28,8 +28,21 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # To adding assets 
   assets:
       - lib/assets/logo.png
       - lib/assets/car_image.jpg
+      - lib/assets/hot_cars/lan.png
+      - lib/assets/hot_cars/alphard.png
+      - lib/assets/hot_cars/prad.png
+      - lib/assets/E_cars/premium.png
+      - lib/assets/E_cars/hybrid.png
+      - lib/assets/E_cars/luxury.png
+      - lib/assets/E_cars/popular.png
+      - lib/assets/toyota.png
+      - lib/assets/Nissan.png
+      - lib/assets/Subaru.png
+      - lib/assets/Mercedenz.png
+      - lib/assets/mitshubi.png
+      - lib/assets/landRover.png
 

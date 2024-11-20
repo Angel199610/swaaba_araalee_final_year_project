@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'onboarding_screen.dart';
+import './login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,10 +13,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Delay for 5 seconds before navigating to OnboardingScreen
-    Future.delayed(const Duration(seconds: 9), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     });
   }
@@ -27,7 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.orange, Color.fromARGB(255, 131, 49, 2)],
+            colors: [
+              Color.fromRGBO(197, 100, 2, 1),
+              Color.fromARGB(255, 223, 127, 10)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -37,9 +40,9 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/logo.png',
-                width: 100, // Adjust the width as needed
-                height: 100, // Adjust the height as needed
+                'lib/assets/logo.png',
+                width: 200, // Adjusting the logo width as needed
+                height: 200, // Adjusting the logo height as needed
               ),
               SizedBox(height: 10),
               Text(
