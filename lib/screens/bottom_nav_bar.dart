@@ -13,11 +13,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   // List of pages to navigate
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page'), // Replace with your actual home page widget
-    Text('Car Categories'), // Replace with your categories page widget
-    Text('Contact Us'), // Replace with your Contact Us page widget
-    Text('Notifications'), // Replace with your Notifications page widget
-    Text('Profile'), // Replace with your profile page widget
+    Text('Home Page'),
+    Text('Car Categories'),
+    Text('Contact Us'),
+    Text('Notifications'),
+    Text('Profile'),
   ];
 
   // Method to handle item selection
@@ -60,7 +60,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: const Color.fromARGB(255, 10, 10, 10),
         onTap: _onItemTapped,
       ),
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/car_categories_screen.dart';
 import '../screens/favorites_screen.dart';
-import '../screens/user_profile_screen.dart';
+import '../screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     CarCategoriesScreen(),
     FavoritesScreen(),
-    UserProfileScreen(),
+    ProfileScreen(),
   ];
 
   // Handles tap on each BottomNavigationBar item

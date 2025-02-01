@@ -11,9 +11,15 @@ class CarCategoriesScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Imported Cars'),
-            Text('Used Cars'),
-            Text('New Cars'),
+            Text('Premium Cars'),
+            Text('Hybrid Cars'),
+            Text('Luxury cars'),
+            Text('Popular family cars'),
+            Text('Toyota'),
+            Text('Nissan'),
+            Text('Subary'),
+            Text('Mercedes Benz'),
+            Text('Mitsubish'),
           ],
         ),
       ),
