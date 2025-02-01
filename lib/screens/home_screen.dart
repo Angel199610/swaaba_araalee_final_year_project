@@ -74,9 +74,9 @@ class HomeScreenContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Text(
-                  "Hello Nanteza Angellah, Welcome To ",
+                  "Hello Nanteza Angellah\nWe have more than 170,14 cars at ",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -142,23 +142,22 @@ class HomeScreenContent extends StatelessWidget {
           ),
 
           // Explore More Section
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Explore More",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8),
-              ],
+          Container(
+            width: double.infinity, // Full width
+            padding: EdgeInsets.symmetric(
+                vertical: 10, horizontal: 16), // Add padding
+            color: const Color.fromARGB(255, 239, 127,
+                7), // Change this to your preferred background color
+            child: Text(
+              "Explore More",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Ensure text is visible
+              ),
             ),
           ),
+
           GridView(
             padding: const EdgeInsets.symmetric(horizontal: 1.0),
             shrinkWrap: true,
@@ -183,12 +182,36 @@ class HomeScreenContent extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Hot Deals",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              children: [
+                Container(
+                  width: double.infinity, // Make it full width
+                  padding: EdgeInsets.symmetric(
+                      vertical: 10, horizontal: 16), // Add some spacing
+                  color: const Color.fromARGB(
+                      255, 232, 61, 13), // Set the background color to orange
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // Space out items
+                    children: [
+                      Text(
+                        "Hot Deals",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors
+                              .white, // Ensure text is visible on orange background
+                        ),
+                      ),
+                      Text(
+                        "See All >",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors
+                              .white70, // Slightly faded white for "See All"
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 1),
@@ -203,19 +226,19 @@ class HomeScreenContent extends StatelessWidget {
                 hotDealCard(
                   'lib/assets/hot_cars/lan.png',
                   'Special offer',
-                  'Description for Hot Deal 1. Great offer!',
+                  'Subaru',
                   '5 days remaining',
                 ),
                 hotDealCard(
                   'lib/assets/hot_cars/alphard.png',
                   'Special offer',
-                  'Toyota Alphard. Special price!',
+                  'Toyota Alphard',
                   '\$30,000',
                 ),
                 hotDealCard(
                   'lib/assets/hot_cars/prad.png',
                   'Special offer',
-                  '2023 BMW 10E. Limited time offer!',
+                  '2023 BMW 10E',
                   '\$28,500',
                 ),
               ],
@@ -290,11 +313,12 @@ class HomeScreenContent extends StatelessWidget {
     );
   }
 
+// styling for hot deals
   static Widget hotDealCard(
       String imagePath, String title, String description, String price) {
     return Container(
       width: 150,
-      margin: const EdgeInsets.only(right: 12.0),
+      margin: const EdgeInsets.only(right: 18.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
@@ -304,11 +328,14 @@ class HomeScreenContent extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(15),
           gradient: LinearGradient(
-            colors: [Colors.black.withOpacity(0.7), Colors.transparent],
+            colors: [
+              const Color.fromARGB(255, 11, 11, 11).withOpacity(0.9),
+              const Color.fromARGB(0, 8, 8, 8)
+            ],
             begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
+            end: Alignment.center,
           ),
         ),
         child: Column(
@@ -333,7 +360,7 @@ class HomeScreenContent extends StatelessWidget {
               price,
               style: const TextStyle(
                 fontSize: 16,
-                color: Colors.white,
+                color: Color.fromARGB(255, 243, 98, 8),
                 fontWeight: FontWeight.bold,
               ),
             ),
