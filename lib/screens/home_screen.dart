@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import './car_categories_screen.dart';
 import './profile_screen.dart';
 
@@ -74,7 +73,7 @@ class HomeScreenContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Text(
-                  "Hello Nanteza Angellah\nWe have more than 170,14 cars at ",
+                  "Welcome\nWe have more than 170,14 cars at ",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

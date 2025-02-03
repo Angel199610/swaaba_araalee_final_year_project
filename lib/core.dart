@@ -10,7 +10,7 @@ export 'package:swaaba_aralee/screens/car_listing_screen.dart';
 export 'package:swaaba_aralee/screens/checkout_payment_screen.dart';
 export 'package:swaaba_aralee/screens/comparison_screen.dart';
 export 'package:swaaba_aralee/screens/favorites_screen.dart';
-export 'package:swaaba_aralee/screens/help_support_screen.dart';
+export 'package:swaaba_aralee/screens/feed_back_screen.dart';
 export 'package:swaaba_aralee/screens/home_screen.dart';
 export 'package:swaaba_aralee/screens/login_screen.dart';
 export 'package:swaaba_aralee/screens/notifications_screen.dart';
