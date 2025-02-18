@@ -11,8 +11,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool notificationsEnabled = true; // Default notification status
-    String userName = "Nanteza Angellah"; // Example user name
-    String avatarUrl = "https://via.placeholder.com/150"; // Example avatar URL
+    String userName = "Nanteza Angellah"; // Example of user name
+    String avatarUrl = "lib/assets/avatar.jpg"; 
 
     return Scaffold(
       appBar: AppBar(
@@ -168,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 5),
                         const Text(
-                          "Version 7.9.5",
+                          "Version 1.0.0",
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey,

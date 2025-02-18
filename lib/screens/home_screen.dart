@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import './car_categories_screen.dart';
 import './profile_screen.dart';
+import './premium_cars_screen.dart';
+import './luxury_cars_screen.dart';
+import './popular_family_cars_screen.dart';
+import './hybrid_car_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -167,11 +171,14 @@ class HomeScreenContent extends StatelessWidget {
               crossAxisSpacing: 10.0,
             ),
             children: [
-              exploreMoreCard('Premium Cars', 'lib/assets/E_cars/premium.png'),
-              exploreMoreCard('Hybrid Cars', 'lib/assets/E_cars/hybrid.png'),
-              exploreMoreCard('Luxury Cars', 'lib/assets/E_cars/luxury.png'),
               exploreMoreCard(
-                  'Popular Family Cars', 'lib/assets/E_cars/popular.png'),
+                  'Premium Cars', 'lib/assets/E_cars/premium.png', context),
+              exploreMoreCard(
+                  'Hybrid Cars', 'lib/assets/E_cars/hybrid.png', context),
+              exploreMoreCard(
+                  'Luxury Cars', 'lib/assets/E_cars/luxury.png', context),
+              exploreMoreCard('Popular Family Cars',
+                  'lib/assets/E_cars/popular.png', context),
             ],
           ),
 
@@ -276,40 +283,72 @@ class HomeScreenContent extends StatelessWidget {
     );
   }
 
-  static Widget exploreMoreCard(String title, String imagePath) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.cover,
-            ),
-          ),
-          height: 200,
-        ),
-        Positioned(
-          bottom: 10,
-          left: 10,
-          child: Container(
-            padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+  static Widget exploreMoreCard(
+      String title, String imagePath, BuildContext context) {
+    return MouseRegion(
+        cursor: SystemMouseCursors.click, // Set the cursor to a hand
+        child: GestureDetector(
+          onTap: () {
+            if (title == 'Premium Cars') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PremiumCarsScreen()),
+              );
+            } else if (title == 'Luxury Cars') {
+              // Add this condition
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LuxuryCarsScreen()),
+              );
+            } else if (title == 'Popular Fammily Cars') {
+              // Add this condition
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PopularFamilyCarsScreen()),
+              );
+            } else if (title == 'Hybrid Cars') {
+              // Add this condition
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HybridCarsScreen()),
+              );
+            }
+          },
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: AssetImage(imagePath),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                height: 200,
               ),
-            ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                child: Container(
+                  padding: const EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
-    );
+        ));
   }
 
 // styling for hot deals

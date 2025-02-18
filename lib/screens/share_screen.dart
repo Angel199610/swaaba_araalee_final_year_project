@@ -6,6 +6,8 @@ class ShareAppScreen extends StatelessWidget {
   final String shareMessage =
       "Check out this amazing app! Download it now: https://yourapp.link";
 
+  const ShareAppScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

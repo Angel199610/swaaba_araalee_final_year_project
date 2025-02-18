@@ -2,7 +2,7 @@ name: swaaba_aralee
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 version: 1.0.0+1
@@ -15,6 +15,9 @@ dependencies:
     sdk: flutter
   google_maps_flutter: ^2.1.1
   share_plus: ^9.0.0
+  http: ^0.13.5
+  dio: ^5.3.2 # or latest version
+  flutter_secure_storage: ^8.0.0 # for token storage
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -32,20 +35,39 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets 
+  # To add assets
   assets:
-      - lib/assets/logo.png
-      - lib/assets/car_image.jpg
-      - lib/assets/hot_cars/lan.png
-      - lib/assets/hot_cars/alphard.png
-      - lib/assets/hot_cars/prad.png
-      - lib/assets/E_cars/premium.png
-      - lib/assets/E_cars/hybrid.png
-      - lib/assets/E_cars/luxury.png
-      - lib/assets/E_cars/popular.png
-      - lib/assets/toyota.png
-      - lib/assets/Nissan.png
-      - lib/assets/Subaru.png
-      - lib/assets/Mercedenz.png
-      - lib/assets/mitshubi.png
-      - lib/assets/landRover.png
+    - lib/assets/logo.png
+    - lib/assets/car_image.jpg
+    - lib/assets/hot_cars/lan.png
+    - lib/assets/hot_cars/alphard.png
+    - lib/assets/hot_cars/prad.png
+    - lib/assets/E_cars/premium.png
+    - lib/assets/E_cars/hybrid.png
+    - lib/assets/E_cars/luxury.png
+    - lib/assets/E_cars/popular.png
+    - lib/assets/toyota.png
+    - lib/assets/Nissan.png
+    - lib/assets/Subaru.png
+    - lib/assets/Mercedenz.png
+    - lib/assets/mitshubi.png
+    - lib/assets/landRover.png
+    - lib/assets/premium/car1.jpeg
+    - lib/assets/premium/car2.jpg
+    - lib/assets/premium/car3.jpg
+    - lib/assets/premium/car4.jpg
+    - lib/assets/premium/car5.jpg
+    - lib/assets/premium/car6.jpg
+    - lib/assets/luxury/car1.jpg
+    - lib/assets/luxury/car2.jpg
+    - lib/assets/luxury/car3.jpg
+    - lib/assets/luxury/car4.jpg
+    - lib/assets/luxury/car5.jpg
+    - lib/assets/luxury/car6.jpg
+    - lib/assets/hybrid/car1.jpg
+    - lib/assets/hybrid/car2.jpg
+    - lib/assets/hybrid/car3.jpg
+    - lib/assets/hybrid/car4.jpg
+    - lib/assets/hybrid/car5.jpg
+    - lib/assets/hybrid/car6.jpg
+    - lib/assets/avatar.jpg

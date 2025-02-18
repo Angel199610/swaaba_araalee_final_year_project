@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(RateUsScreen());
 
 class RateUsScreen extends StatelessWidget {
+  const RateUsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,6 +14,8 @@ class RateUsScreen extends StatelessWidget {
 }
 
 class RateUsPage extends StatefulWidget {
+  const RateUsPage({super.key});
+
   @override
   _RateUsPageState createState() => _RateUsPageState();
 }
@@ -79,10 +83,10 @@ class _RateUsPageState extends State<RateUsPage> {
                     SnackBar(content: Text('Thank you for your feedback!')),
                   );
                 },
-                child: Text("Submit"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                 ),
+                child: Text("Submit"),
               ),
             ),
           ],
