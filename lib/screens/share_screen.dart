@@ -13,7 +13,7 @@ class ShareAppScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Share This App"),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color.fromARGB(255, 231, 124, 37),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),

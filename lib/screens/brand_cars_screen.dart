@@ -1,23 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/premium_car_service.dart';
+import '../services/hybrid_car_service.dart';
+import '../services/luxury_car_service.dart';
 import '../services/popular_family_car_service.dart';
-import 'dart:async'; // For Timer
+import 'dart:async';
 
-class PopularFamilyCarsScreen extends StatefulWidget {
-  const PopularFamilyCarsScreen({super.key});
+class BrandCarsScreen extends StatefulWidget {
+  final String brand;
+
+  const BrandCarsScreen({super.key, required this.brand});
 
   @override
-  State<PopularFamilyCarsScreen> createState() => _PopularFamilyCarsScreenState();
+  State<BrandCarsScreen> createState() => _BrandCarsScreenState();
 }
 
-class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
-  late Future<List<Map<String, dynamic>>> _popularCarsFuture;
+class _BrandCarsScreenState extends State<BrandCarsScreen> {
+  late Future<List<Map<String, dynamic>>> _brandCarsFuture;
 
   @override
   void initState() {
     super.initState();
-    _popularCarsFuture = PopularFamilyCarService.fetchPopularFamilyCars();
+    _brandCarsFuture = _fetchBrandCars();
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchBrandCars() async {
+    try {
+      // Fetch cars from all categories with brand filter
+      final premiumCarsFuture =
+          PremiumCarService.fetchPremiumCars(brand: widget.brand);
+      final hybridCarsFuture =
+          HybridCarService.fetchHybridCars(brand: widget.brand);
+      final luxuryCarsFuture =
+          LuxuryCarService.fetchLuxuryCars(brand: widget.brand);
+      final popularFamilyCarsFuture =
+          PopularFamilyCarService.fetchPopularFamilyCars(brand: widget.brand);
+
+      // Wait for all futures to complete
+      final results = await Future.wait([
+        premiumCarsFuture,
+        hybridCarsFuture,
+        luxuryCarsFuture,
+        popularFamilyCarsFuture,
+      ]);
+
+      // Combine all cars into a single list
+      List<Map<String, dynamic>> allCars = [];
+      allCars.addAll(results[0].map((car) => {...car, 'category': 'Premium'}));
+      allCars.addAll(results[1].map((car) => {...car, 'category': 'Hybrid'}));
+      allCars.addAll(results[2].map((car) => {...car, 'category': 'Luxury'}));
+      allCars.addAll(
+          results[3].map((car) => {...car, 'category': 'Popular Family'}));
+
+      return allCars; // No need to filter here since the API already filtered
+    } catch (e) {
+      print("Error fetching brand cars: $e");
+      throw Exception("Error fetching cars for brand ${widget.brand}: $e");
+    }
   }
 
   // Function to launch phone call
@@ -50,27 +90,29 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Popular Family Cars'),
+        title: Text('${widget.brand} Cars'),
         backgroundColor: const Color.fromARGB(255, 243, 123, 10),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _popularCarsFuture,
+        future: _brandCarsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             print("Snapshot error: ${snapshot.error}");
             String errorMessage = snapshot.error.toString();
-            return Center(child: Text('Error loading popular family cars: $errorMessage'));
+            return Center(
+                child:
+                    Text('Error loading ${widget.brand} cars: $errorMessage'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No popular family cars available'));
+            return Center(child: Text('No ${widget.brand} cars available'));
           }
 
-          final popularCars = snapshot.data!;
+          final brandCars = snapshot.data!;
           return ListView.builder(
-            itemCount: popularCars.length,
+            itemCount: brandCars.length,
             itemBuilder: (context, index) {
-              final car = popularCars[index];
+              final car = brandCars[index];
               final images = [
                 car['image_front'],
                 car['image_back'],
@@ -94,25 +136,31 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
                               ? SizedBox(
                                   height: 200,
                                   width: double.infinity,
-                                  child: ImageCarousel(images: images.cast<String>()),
+                                  child: ImageCarousel(
+                                    images: images.cast<String>(),
+                                  ),
                                 )
-                              : const Icon(Icons.image_not_supported, size: 200),
+                              : const Icon(Icons.image_not_supported,
+                                  size: 200),
                         ),
                         if (car['featured'] == 1 || car['featured'] == true)
                           Positioned(
                             top: 10,
                             left: 10,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: const Row(
                                 children: [
-                                  Icon(Icons.thumb_up, color: Colors.white, size: 16),
+                                  Icon(Icons.thumb_up,
+                                      color: Colors.white, size: 16),
                                   SizedBox(width: 5),
-                                  Text('Featured', style: TextStyle(color: Colors.white)),
+                                  Text('Featured',
+                                      style: TextStyle(color: Colors.white)),
                                 ],
                               ),
                             ),
@@ -126,92 +174,135 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
                         children: [
                           Text(
                             car['title'] ?? 'No title',
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            car['monthly'] ?? 'No monthly price',
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
-                          ),
+                          if (car['category'] == 'Popular Family')
+                            Text(
+                              car['monthly'] ?? 'N/A',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.grey),
+                            ),
                           Text(
                             car['price'] ?? 'No price',
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
                           ),
                           const SizedBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.calendar_today, '${car['year'] ?? 'N/A'}', 'Year'),
-                              _carDetail(Icons.confirmation_number, car['ref_no'] ?? 'N/A', 'Ref No'),
-                              _carDetail(Icons.directions_car, car['chassis_no'] ?? 'N/A', 'Chassis No'),
+                              _carDetail(Icons.confirmation_number,
+                                  car['ref_no'] ?? 'N/A', 'Ref No'),
+                              _carDetail(Icons.directions_car,
+                                  car['chassis_no'] ?? 'N/A', 'Chassis No'),
+                              _carDetail(Icons.model_training,
+                                  car['model_code'] ?? 'N/A', 'Model Code'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.speed, '${car['mileage'] ?? 'N/A'} km', 'Mileage'),
-                              _carDetail(Icons.settings, car['transmission'] ?? 'N/A', 'Transmission'),
-                              _carDetail(Icons.local_gas_station, car['fuel'] ?? 'N/A', 'Fuel'),
+                              _carDetail(Icons.speed,
+                                  '${car['mileage'] ?? 'N/A'} km', 'Mileage'),
+                              _carDetail(Icons.settings,
+                                  car['transmission'] ?? 'N/A', 'Transmission'),
+                              _carDetail(Icons.local_gas_station,
+                                  car['fuel'] ?? 'N/A', 'Fuel'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.engineering, car['engine_code'] ?? 'N/A', 'Engine Code'),
-                              _carStyle(Icons.engineering, '${car['engine_size'] ?? 'N/A'}cc', 'Engine Size'),
-                              _carDetail(Icons.color_lens, car['ext_color'] ?? 'N/A', 'Color'),
+                              _carDetail(Icons.engineering,
+                                  car['engine_code'] ?? 'N/A', 'Engine Code'),
+                              _carStyle(
+                                  Icons.engineering,
+                                  '${car['engine_size'] ?? 'N/A'}cc',
+                                  'Engine Size'),
+                              _carDetail(Icons.color_lens,
+                                  car['ext_color'] ?? 'N/A', 'Color'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.location_on, car['location'] ?? 'N/A', 'Location'),
-                              _carDetail(Icons.event, car['registration_year_month'] ?? 'N/A', 'Reg Year'),
-                              _carDetail(Icons.build, car['manufacture_year_month'] ?? 'N/A', 'Mfg Year'),
+                              _carDetail(Icons.location_on,
+                                  car['location'] ?? 'N/A', 'Location'),
+                              _carDetail(
+                                  Icons.event,
+                                  car['registration_year_month'] ?? 'N/A',
+                                  'Reg Year'),
+                              _carDetail(
+                                  Icons.build,
+                                  car['manufacture_year_month'] ?? 'N/A',
+                                  'Mfg Year'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.drive_eta, car['drive'] ?? 'N/A', 'Drive'),
-                              _carDetail(Icons.door_sliding, '${car['doors'] ?? 'N/A'}', 'Doors'),
-                              _carDetail(Icons.airline_seat_recline_normal, '${car['seats'] ?? 'N/A'}', 'Seats'),
+                              _carDetail(Icons.drive_eta, car['drive'] ?? 'N/A',
+                                  'Drive'),
+                              _carDetail(Icons.door_sliding,
+                                  '${car['doors'] ?? 'N/A'}', 'Doors'),
+                              _carDetail(Icons.airline_seat_recline_normal,
+                                  '${car['seats'] ?? 'N/A'}', 'Seats'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.directions_car, car['steering'] ?? 'N/A', 'Steering'),
-                              _carDetail(Icons.square_foot, car['dimensions'] ?? 'N/A', 'Dimensions'),
-                              _carDetail(Icons.fitness_center, '${car['weight'] ?? 'N/A'} kg', 'Weight'),
+                              _carDetail(Icons.directions_car,
+                                  car['steering'] ?? 'N/A', 'Steering'),
+                              _carDetail(Icons.square_foot,
+                                  car['dimensions'] ?? 'N/A', 'Dimensions'),
+                              _carDetail(Icons.fitness_center,
+                                  '${car['weight'] ?? 'N/A'} kg', 'Weight'),
                             ],
                           ),
                           const SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _carDetail(Icons.cable, '${car['m3'] ?? 'N/A'}', 'M3'),
-                              _carDetail(Icons.opacity, car['max_cap'] ?? 'N/A', 'Max Cap'),
-                              _carDetail(Icons.subtitles, car['sub_ref_no'] ?? 'N/A', 'Sub Ref No'),
+                              _carDetail(
+                                  Icons.cable, '${car['m3'] ?? 'N/A'}', 'M3'),
+                              _carDetail(Icons.opacity, car['max_cap'] ?? 'N/A',
+                                  'Max Cap'),
+                              _carDetail(Icons.subtitles,
+                                  car['sub_ref_no'] ?? 'N/A', 'Sub Ref No'),
                             ],
                           ),
+                          if (car['category'] == 'Popular Family') ...[
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _carDetail(Icons.calendar_today,
+                                    '${car['year'] ?? 'N/A'}', 'Year'),
+                              ],
+                            ),
+                          ],
                           const SizedBox(height: 10),
                           Row(
                             children: [
                               Expanded(
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 241, 135, 43),
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 241, 135, 43),
                                     foregroundColor: Colors.black,
                                   ),
                                   onPressed: () {
-                                    _launchPhoneCall('+256780619890'); 
+                                    _launchPhoneCall('+256780619890');
                                   },
                                   child: const Text('Contact Seller'),
                                 ),
@@ -224,15 +315,14 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
                                     foregroundColor: Colors.white,
                                   ),
                                   onPressed: () {
-                                    _launchWhatsApp(
-                                      '+256780619890', 
-                                      'Hello, I am interested in the ${car['title']} popular family car listed for ${car['price']}. Can you provide more details?',
-                                    );
+                                    _launchWhatsApp('+256780619890',
+                                        'Hello, I am interested in the ${car['title']} ${car['category'].toLowerCase()} car listed for ${car['price']}. Can you provide more details?');
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(FontAwesomeIcons.whatsapp, color: Colors.green.shade100),
+                                      Icon(FontAwesomeIcons.whatsapp,
+                                          color: Colors.green.shade100),
                                       const SizedBox(width: 5),
                                       const Text('WhatsApp'),
                                     ],
@@ -261,10 +351,14 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
           children: [
             Icon(icon, size: 16, color: Colors.grey),
             const SizedBox(width: 5),
-            Text(text, style: const TextStyle(fontSize: 14, color: Colors.black)),
+            Text(text,
+                style: const TextStyle(fontSize: 14, color: Colors.black)),
           ],
         ),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
       ],
     );
   }
@@ -276,10 +370,14 @@ class _PopularFamilyCarsScreenState extends State<PopularFamilyCarsScreen> {
           children: [
             Icon(icon, size: 16, color: Colors.grey),
             const SizedBox(width: 5),
-            Text(text, style: const TextStyle(fontSize: 14, color: Colors.black)),
+            Text(text,
+                style: const TextStyle(fontSize: 14, color: Colors.black)),
           ],
         ),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
       ],
     );
   }
@@ -303,6 +401,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
   @override
   void initState() {
     super.initState();
+    // Auto-play every 3 seconds
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted && widget.images.isNotEmpty) {
         final nextIndex = (_currentIndex + 1) % widget.images.length;

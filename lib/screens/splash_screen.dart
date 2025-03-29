@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './login_screen.dart';
+import './onboarding_screen.dart'; // Import the OnboardingScreen
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,11 +12,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Delay for 5 seconds before navigating to OnboardingScreen
+    // Delay for 3 seconds before navigating to OnboardingScreen
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
       );
     });
   }
@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             colors: [
               Color.fromRGBO(255, 144, 33, 1),
-              Color.fromARGB(255, 223, 127, 10)
+              Color.fromARGB(255, 223, 127, 10),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -44,8 +44,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 width: 200, // Adjusting the logo width as needed
                 height: 200, // Adjusting the logo height as needed
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'The Best Automotive Source',
                 style: TextStyle(
                   fontSize: 16,

@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:swaaba_aralee/screens/contat_us_screen.dart';
+import 'package:swaaba_aralee/screens/contact_us_screen.dart';
 import './policies_screen.dart';
 import 'feed_back_screen.dart';
 import './share_screen.dart';
 import './rate_screen.dart';
+import 'package:swaaba_aralee/services/api_service.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final ApiService apiService; // Add ApiService as a required parameter
+
+  const ProfileScreen({super.key, required this.apiService});
 
   @override
   Widget build(BuildContext context) {
-    bool notificationsEnabled = true; // Default notification status
-    String userName = "Nanteza Angellah"; // Example of user name
-    String avatarUrl = "lib/assets/avatar.jpg"; 
+    bool notificationsEnabled = true;
+    // String userName = "Nanteza Angellah";
+    // String avatarUrl = "lib/assets/avatar.jpg";
 
     return Scaffold(
       appBar: AppBar(
@@ -21,18 +24,9 @@ class ProfileScreen extends StatelessWidget {
           children: [
             // User Avatar
             CircleAvatar(
-              backgroundImage: NetworkImage(avatarUrl),
-            ),
+                // backgroundImage: NetworkImage(avatarUrl),
+                ),
             const SizedBox(width: 10), // Space between avatar and name
-            // User Name
-            Text(
-              userName,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white, // White text for contrast
-              ),
-            ),
           ],
         ),
       ),
@@ -79,7 +73,6 @@ class ProfileScreen extends StatelessWidget {
                               builder: (context) => PrivacyPolicyScreen()));
                     },
                   ),
-
                   const SizedBox(height: 10),
                   _buildCard(
                     context,
@@ -142,9 +135,18 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.logout,
                     title: "Logout",
                     centered: true,
-                    onTap: () {},
+                    onTap: () async {
+                      try {
+                        await apiService
+                            .logout(); // Use the passed ApiService to logout
+                        Navigator.pushReplacementNamed(context, '/login');
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Logout failed: $e')),
+                        );
+                      }
+                    },
                   ),
-
                   const SizedBox(height: 30), // Space before logo
 
                   // Swaaba Araale Logo, Title, and Version
@@ -152,14 +154,14 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Column(
                       children: [
-                        Image.asset(
-                          'lib/assets/logo.png', // Ensure you have a logo in assets
-                          height: 50,
-                        ),
+                        // Image.asset(
+                        //   'lib/assets/logo.png',
+                        //   height: 50,
+                        // ),
                         const SizedBox(
                             height: 10), // Space between logo and text
                         const Text(
-                          "Swaaba Araale",
+                          "Swaaba Aralee",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -269,215 +271,3 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-
-// class ProfileScreen extends StatelessWidget {
-//   const ProfileScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     bool notificationsEnabled = true; // Default notification status
-//     String userName = "Nanteza Angellah"; // Example user name
-//     String avatarUrl = "https://via.placeholder.com/150"; // Example avatar URL
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.orange, // Set background color to orange
-//         title: Row(
-//           children: [
-//             // User Avatar
-//             CircleAvatar(
-//               backgroundImage: NetworkImage(avatarUrl),
-//             ),
-//             const SizedBox(width: 10), // Space between avatar and name
-//             // User Name
-//             Text(
-//               userName,
-//               style: const TextStyle(
-//                 fontSize: 18,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.white, // White text for contrast
-//               ),
-//             ),
-//             // const Spacer(), // Push notification icon to the right
-//             // // Notifications Icon
-//             // IconButton(
-//             //   icon: const Icon(Icons.notifications, color: Colors.white),
-//             //   onPressed: () {
-//             //     // Handle notification tap
-//             //   },
-//             // ),
-//           ],
-//         ),
-//       ),
-//       body: ListView(
-//         padding: const EdgeInsets.all(16.0),
-//         children: [
-//           // Notifications
-//           ListTile(
-//             leading: const Icon(Icons.notifications),
-//             title: const Text("Notifications"),
-//             trailing: StatefulBuilder(
-//               builder: (BuildContext context, setState) {
-//                 return Switch(
-//                   value: notificationsEnabled,
-//                   onChanged: (value) {
-//                     setState(() {
-//                       notificationsEnabled = value;
-//                     });
-//                   },
-//                 );
-//               },
-//             ),
-//           ),
-//           const Divider(),
-
-//           // Language
-//           ListTile(
-//             leading: const Icon(Icons.language),
-//             title: const Text("Language"),
-//             onTap: () {
-//               _showLanguageDialog(context);
-//             },
-//           ),
-//           const Divider(),
-
-//           // Privacy Policy & Terms of Use
-//           ListTile(
-//             leading: const Icon(Icons.privacy_tip),
-//             title: const Text("Privacy Policy & Terms of Use"),
-//             onTap: () {},
-//           ),
-//           const Divider(),
-
-//           // Help and Feedback
-//           ListTile(
-//             leading: const Icon(Icons.help_outline),
-//             title: const Text("Help and Feedback"),
-//             onTap: () {},
-//           ),
-//           const Divider(),
-
-//           // Rate Us
-//           ListTile(
-//             leading: const Icon(Icons.star_rate),
-//             title: const Text("Rate Us"),
-//             onTap: () {},
-//           ),
-//           const Divider(),
-
-//           // Share this App
-//           ListTile(
-//             leading: const Icon(Icons.share),
-//             title: const Text("Share This App"),
-//             onTap: () {},
-//           ),
-//           const Divider(),
-
-//           // Delete Account
-//           ListTile(
-//             leading: const Icon(Icons.delete_forever),
-//             title: const Text("Delete Account"),
-//             onTap: () {
-//               _showDeleteAccountDialog(context);
-//             },
-//           ),
-//           const Divider(),
-
-//           // Logout
-//           Align(
-//             alignment: Alignment.center,
-//             child: ListTile(
-//                // Orange icon with larger size
-//               title: Text(
-//                 "Logout",
-//                 textAlign: TextAlign.center, // Centers the text
-//                 style: TextStyle(fontWeight: FontWeight.bold), // Bold text
-//               ),
-//               onTap: () {},
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   void _showLanguageDialog(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text("Select Language"),
-//           content: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               ListTile(
-//                 title: const Text("English"),
-//                 onTap: () {
-//                   Navigator.pop(context);
-//                 },
-//               ),
-//               ListTile(
-//                 title: const Text("French"),
-//                 onTap: () {
-//                   Navigator.pop(context);
-//                 },
-//               ),
-//               ListTile(
-//                 title: const Text("Spanish"),
-//                 onTap: () {
-//                   Navigator.pop(context);
-//                 },
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   void _showDeleteAccountDialog(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text("Delete Account"),
-//           content: const Text(
-//               "Are you sure you want to delete your account? This action cannot be undone."),
-//           actions: [
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//               child: const Text("Cancel"),
-//             ),
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//               child: const Text("Delete"),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }

@@ -1,166 +1,429 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../services/premium_car_service.dart';
+import 'dart:async';
 
-class PremiumCarsScreen extends StatelessWidget {
-  final List<Map<String, dynamic>> cars = [
-    {
-      "image": "lib/assets/premium/car1.jpeg",
-      "title": "2021 BMW 5 Series 530i",
-      "price": "RM 250,000",
-      "mileage": "30 - 40K KM",
-      "transmission": "Automatic",
-      "engine": "1998 cc",
-      "color": "Black",
-      "location": "Kuala Lumpur"
-    },
-    {
-      "image": "lib/assets/premium/car2.jpg",
-      "title": "2022 Mercedes-Benz E300 AMG",
-      "price": "RM 320,000",
-      "mileage": "10 - 15K KM",
-      "transmission": "Automatic",
-      "engine": "1991 cc",
-      "color": "Silver",
-      "location": "Petaling Jaya"
-    },
-    {
-      "image": "lib/assets/premium/car3.jpg",
-      "title": "2023 Audi A6 3.0 TFSI Quattro",
-      "price": "RM 350,000",
-      "mileage": "5 - 10K KM",
-      "transmission": "Automatic",
-      "engine": "2995 cc",
-      "color": "Blue",
-      "location": "Seremban"
-    },
-    {
-      "image": "lib/assets/premium/car4.jpg",
-      "title": "2023 Audi A6 3.0 TFSI Quattro",
-      "price": "RM 350,000",
-      "mileage": "5 - 10K KM",
-      "transmission": "Automatic",
-      "engine": "2995 cc",
-      "color": "Blue",
-      "location": "Seremban"
-    },
-    {
-      "image": "lib/assets/premium/car5.jpg",
-      "title": "2023 Audi A6 3.0 TFSI Quattro",
-      "price": "RM 350,000",
-      "mileage": "5 - 10K KM",
-      "transmission": "Automatic",
-      "engine": "2995 cc",
-      "color": "Blue",
-      "location": "Seremban"
+class PremiumCarsScreen extends StatefulWidget {
+  const PremiumCarsScreen(
+      {super.key}); // Removed 'const' to fix immutability issue
+
+  @override
+  State<PremiumCarsScreen> createState() =>
+      _PremiumCarsScreenState(); // Fixed createState syntax
+}
+
+class _PremiumCarsScreenState extends State<PremiumCarsScreen> {
+  late Future<List<Map<String, dynamic>>> _carsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _carsFuture = PremiumCarService.fetchPremiumCars();
+  }
+
+  // Function to launch phone call
+  Future<void> _launchPhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(phoneUri)) {
+      // Fixed type mismatch: phoneNumber is a String, not a Uri
+      await launchUrl(phoneUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch phone call')),
+      );
     }
-  ];
+  }
 
-  PremiumCarsScreen({super.key});
+  // Function to launch WhatsApp
+  Future<void> _launchWhatsApp(String phoneNumber, String message) async {
+    final Uri whatsappUri = Uri.parse(
+      'https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}',
+    );
+    if (await canLaunchUrl(whatsappUri)) {
+      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not launch WhatsApp')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Premium Cars"),
-        backgroundColor: const Color.fromARGB(255, 248, 139, 37),
+        title: const Text('Premium Cars'),
+        backgroundColor: const Color.fromARGB(255, 243, 123, 10),
       ),
-      body: ListView.builder(
-        itemCount: cars.length,
-        itemBuilder: (context, index) {
-          final car = cars[index];
-          return Card(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(car["image"],
-                    fit: BoxFit.cover, height: 200, width: double.infinity),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        car["title"],
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 5),
-                      Text(car["price"],
-                          style: TextStyle(fontSize: 16, color: Colors.blue)),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(Icons.speed, size: 18),
-                          SizedBox(width: 5),
-                          Text(car["mileage"]),
-                          SizedBox(width: 15),
-                          Icon(Icons.settings, size: 18),
-                          SizedBox(width: 5),
-                          Text(car["transmission"]),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(Icons.local_gas_station, size: 18),
-                          SizedBox(width: 5),
-                          Text(car["engine"]),
-                          SizedBox(width: 15),
-                          Icon(Icons.color_lens, size: 18),
-                          SizedBox(width: 5),
-                          Text(car["color"]),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on, size: 18),
-                          SizedBox(width: 5),
-                          Text(car["location"]),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 242, 141, 40)),
-                            child: Text(
-                              "Contact Seller",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green),
-                            child: Text(
-                              "WhatsApp",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _carsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            print("Snapshot error: ${snapshot.error}");
+            String errorMessage = snapshot.error.toString();
+            return Center(
+                child: Text('Error loading premium cars: $errorMessage'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No premium cars available'));
+          }
+
+          final premiumCars = snapshot.data!;
+          return ListView.builder(
+            itemCount: premiumCars.length,
+            itemBuilder: (context, index) {
+              final car = premiumCars[index];
+              final images = [
+                car['image_front'],
+                car['image_back'],
+                car['image_inside'],
+                car['image_beside'],
+                car['image_full'],
+              ].where((image) => image != null && image.isNotEmpty).toList();
+
+              return Card(
+                margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: images.isNotEmpty
+                              ? SizedBox(
+                                  height: 200,
+                                  width: double.infinity,
+                                  child: ImageCarousel(
+                                    images: images.cast<String>(),
+                                  ),
+                                )
+                              : const Icon(Icons.image_not_supported,
+                                  size: 200),
+                        ),
+                        if (car['featured'] == 1 || car['featured'] == true)
+                          Positioned(
+                            top: 10,
+                            left: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.thumb_up,
+                                      color: Colors.white, size: 16),
+                                  SizedBox(width: 5),
+                                  Text('Featured',
+                                      style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            car['title'] ?? 'No title',
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            car['price'] ?? 'No price',
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.confirmation_number,
+                                  car['ref_no'] ?? 'N/A', 'Ref No'),
+                              _carDetail(Icons.directions_car,
+                                  car['chassis_no'] ?? 'N/A', 'Chassis No'),
+                              _carDetail(Icons.model_training,
+                                  car['model_code'] ?? 'N/A', 'Model Code'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.speed,
+                                  '${car['mileage'] ?? 'N/A'} km', 'Mileage'),
+                              _carDetail(Icons.settings,
+                                  car['transmission'] ?? 'N/A', 'Transmission'),
+                              _carDetail(Icons.local_gas_station,
+                                  car['fuel'] ?? 'N/A', 'Fuel'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.engineering,
+                                  car['engine_code'] ?? 'N/A', 'Engine Code'),
+                              _carStyle(
+                                  Icons.engineering,
+                                  '${car['engine_size'] ?? 'N/A'}cc',
+                                  'Engine Size'),
+                              _carDetail(Icons.color_lens,
+                                  car['ext_color'] ?? 'N/A', 'Color'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.location_on,
+                                  car['location'] ?? 'N/A', 'Location'),
+                              _carDetail(
+                                  Icons.event,
+                                  car['registration_year_month'] ?? 'N/A',
+                                  'Reg Year'),
+                              _carDetail(
+                                  Icons.build,
+                                  car['manufacture_year_month'] ?? 'N/A',
+                                  'Mfg Year'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.drive_eta, car['drive'] ?? 'N/A',
+                                  'Drive'),
+                              _carDetail(Icons.door_sliding,
+                                  '${car['doors'] ?? 'N/A'}', 'Doors'),
+                              _carDetail(Icons.airline_seat_recline_normal,
+                                  '${car['seats'] ?? 'N/A'}', 'Seats'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(Icons.directions_car,
+                                  car['steering'] ?? 'N/A', 'Steering'),
+                              _carDetail(Icons.square_foot,
+                                  car['dimensions'] ?? 'N/A', 'Dimensions'),
+                              _carDetail(Icons.fitness_center,
+                                  '${car['weight'] ?? 'N/A'} kg', 'Weight'),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _carDetail(
+                                  Icons.cable, '${car['m3'] ?? 'N/A'}', 'M3'),
+                              _carDetail(Icons.opacity, car['max_cap'] ?? 'N/A',
+                                  'Max Cap'),
+                              _carDetail(Icons.subtitles,
+                                  car['sub_ref_no'] ?? 'N/A', 'Sub Ref No'),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 241, 135, 43),
+                                    foregroundColor: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    _launchPhoneCall('+256780619890');
+                                  },
+                                  child: const Text('Contact Seller'),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    _launchWhatsApp('+256780619890',
+                                        'Hello, I am interested in the ${car['title']} premium car listed for ${car['price']}. Can you provide more details?');
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(FontAwesomeIcons.whatsapp,
+                                          color: Colors.green.shade100),
+                                      const SizedBox(width: 5),
+                                      const Text('WhatsApp'),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           );
         },
       ),
     );
   }
+
+  Widget _carDetail(IconData icon, String text, String label) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.grey),
+            const SizedBox(width: 5),
+            Text(text,
+                style: const TextStyle(fontSize: 14, color: Colors.black)),
+          ],
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    );
+  }
+
+  Widget _carStyle(IconData icon, String text, String label) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.grey),
+            const SizedBox(width: 5),
+            Text(text,
+                style: const TextStyle(fontSize: 14, color: Colors.black)),
+          ],
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    );
+  }
 }
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: PremiumCarsScreen(),
-  ));
+// Custom ImageCarousel widget using PageView
+class ImageCarousel extends StatefulWidget {
+  final List<String> images;
+
+  const ImageCarousel({super.key, required this.images});
+
+  @override
+  State<ImageCarousel> createState() => _ImageCarouselState();
 }
 
+class _ImageCarouselState extends State<ImageCarousel> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+  Timer? _timer;
 
+  @override
+  void initState() {
+    super.initState();
+    // Auto-play every 3 seconds
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (mounted && widget.images.isNotEmpty) {
+        final nextIndex = (_currentIndex + 1) % widget.images.length;
+        _pageController.animateToPage(
+          nextIndex,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        PageView.builder(
+          controller: _pageController,
+          itemCount: widget.images.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          itemBuilder: (context, index) {
+            return Image.network(
+              widget.images[index],
+              width: double.infinity,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const Center(child: CircularProgressIndicator());
+              },
+              errorBuilder: (context, error, stackTrace) {
+                print("Error loading image: $error");
+                return const Icon(Icons.error, size: 50, color: Colors.red);
+              },
+            );
+          },
+        ),
+        Positioned(
+          bottom: 10,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: widget.images.asMap().entries.map((entry) {
+              return GestureDetector(
+                onTap: () => _pageController.animateToPage(
+                  entry.key,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                ),
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentIndex == entry.key
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.4),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}

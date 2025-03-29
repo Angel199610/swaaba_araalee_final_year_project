@@ -1,10 +1,7 @@
 name: swaaba_aralee
 description: "A new Flutter project."
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 
-# The following defines the version and build number for your application.
 version: 1.0.0+1
 
 environment:
@@ -14,30 +11,26 @@ dependencies:
   flutter:
     sdk: flutter
   google_maps_flutter: ^2.1.1
+  google_fonts: ^6.2.1
   share_plus: ^9.0.0
-  http: ^1.1.2
-
-  dio: ^5.3.2 # or latest version
-  flutter_secure_storage: ^8.0.0 # for token storage
-  shared_preferences: ^2.0.15
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  http: ^1.2.2 # Updated to latest stable
+  dio: ^5.7.0 # Updated to latest stable
+  flutter_secure_storage: ^9.2.2 # Updated to latest stable
+  shared_preferences: ^2.3.2 # Updated to latest stable
   cupertino_icons: ^1.0.8
   url_launcher: ^6.3.1
   font_awesome_flutter: ^10.8.0
+  flutter_carousel_widget: ^2.2.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^5.0.0
 
-# The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
 
-  # To add assets
   assets:
     - lib/assets/logo.png
     - lib/assets/car_image.jpg
@@ -49,6 +42,9 @@ flutter:
     - lib/assets/E_cars/luxury.png
     - lib/assets/E_cars/popular.png
     - lib/assets/toyota.png
+    - lib/assets/screen11.jpg
+    - lib/assets/screen2.avif
+    - lib/assets/screen3.avif
     - lib/assets/Nissan.png
     - lib/assets/Subaru.png
     - lib/assets/Mercedenz.png
@@ -73,3 +69,14 @@ flutter:
     - lib/assets/hybrid/car5.jpg
     - lib/assets/hybrid/car6.jpg
     - lib/assets/avatar.jpg
+    - lib/assets/onboarding/home.png
+    - lib/assets/onboarding/find.png
+    - lib/assets/onboarding/login.png
+    - lib/assets/hybrid/hybrid1_back.jpg
+    - lib/assets/hybrid/hybrid1_front.jpg
+    - lib/assets/hybrid/hybrid1_inside.jpg
+    - lib/assets/hybrid/hybrid1_beside.jpg
+    - lib/assets/hybrid/hybrid2_front.jpg
+    - lib/assets/hybrid/hybrid2_back.jpg
+    - lib/assets/hybrid/hybrid2_inside.jpg
+    - lib/assets/hybrid/hybrid2_beside.jpg
